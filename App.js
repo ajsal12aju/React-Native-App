@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
 export default function App() {
+  const { width } = Dimensions.get('window'); // Get the screen width
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <View style={[styles.container, width > 768 && styles.webContainer]}>
+      <Text>Updated data</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +15,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  webContainer: {
+    maxWidth: 400, // Limit the width for browser views
+    marginHorizontal: 'auto', // Center it horizontally
   },
 });
