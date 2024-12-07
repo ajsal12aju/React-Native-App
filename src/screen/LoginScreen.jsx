@@ -1,43 +1,222 @@
-import React from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ImageBackground } from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import { colors } from "../utils/colors";
+import { fonts } from "../utils/fonts";
+
+import Ionicons from "react-native-vector-icons/Ionicons";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
+  const [secureEntery, setSecureEntery] = useState(true);
+
+const navigation = useNavigation();
+  const handleGoToSignUp = () => {
+    navigation.navigate("Home"); 
+  };
+   const toHome = () => {
+    navigation.navigate("Home"); 
+  };
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Background Image */}
+    <View style={styles.container}>
       <ImageBackground
-        source={require('../assets/bg.jpg')} // Ensure the path is correct
-        style={styles.backgroundImage}
+        source={require("../assets/bg.jpg")}
+        style={styles.background}
+        resizeMode="cover"
       >
-        {/* Transparent Overlay */}
-        <View style={styles.overlay}>
-          {/* Content */}
-          <Text style={styles.text}>Login</Text>
+        {/* Overlay */}
+        <View style={styles.overlay}></View>
+
+        {/* <TouchableOpacity style={styles.backButtonWrapper} onPress={handleGoBack}>
+          <Ionicons
+            name={"arrow-back-outline"}
+            color={colors.primary}
+            size={25}
+          />
+        </TouchableOpacity> */}
+
+        <View style={styles.textContainer}>
+          <Text style={styles.headingText}>Heyee,</Text>
+          <Text style={styles.headingText}>Welcome Back</Text>
+        </View>
+
+        {/* form  */}
+        <View style={styles.formContainer}>
+          <View style={styles.inputContainer}>
+            <Ionicons name={"mail-outline"} size={30} color={colors.secondary} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your email"
+              placeholderTextColor={colors.secondary}
+              keyboardType="email-address"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <SimpleLineIcons name={"lock"} size={30} color={colors.secondary} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your password"
+              placeholderTextColor={colors.secondary}
+              secureTextEntry={secureEntery}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                setSecureEntery((prev) => !prev);
+              }}
+            >
+              <SimpleLineIcons name={"eye"} size={20} color={colors.secondary} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity  onPress={toHome} style={styles.loginButtonWrapper}>
+            <Text style={styles.loginText}>Login</Text>
+          </TouchableOpacity>
+          <Text style={styles.continueText}>or continue with</Text>
+          <TouchableOpacity style={styles.googleButtonContainer}>
+            <Image
+              source={require("../assets/google.png")}
+              style={styles.googleImage}
+            />
+            <Text style={styles.googleText}>Google</Text>
+          </TouchableOpacity>
+          <View style={styles.footerContainer}>
+               <TouchableOpacity onPress={handleGoToSignUp}>
+        <Text style={styles.accountText}>Don't have an account? Sign Up</Text>
+      </TouchableOpacity>
+          </View>
         </View>
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 };
 
+export default LoginScreen;
+
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,  // Ensure content inside the screen is not stretched to the edges
+  },
   container: {
     flex: 1,
-  },
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover', // Ensures the image covers the screen
+    backgroundColor: colors.white,
+    paddingTop:15, 
   },
   overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Gray transparency
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    zIndex: 1,
   },
-  text: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#ffffff', // White text for contrast
+  backButtonWrapper: {
+    height: 40,
+    width: 40,
+    backgroundColor: colors.gray,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2,
+  },
+  textContainer: {
+    // marginVertical: 20,
+    zIndex: 2,
+  },
+  headingText: {
+    fontSize: 32,
+    color: colors.secondary,
+    fontFamily: fonts.SemiBold,
+  },
+  formContainer: {
+    marginTop: 20,
+    zIndex: 2,
+  },
+  inputContainer: {
+    borderWidth: 1,
+    borderColor: colors.secondary,
+    borderRadius: 100,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 2,
+    marginVertical: 10,
+  },
+  textInput: {
+    flex: 1,
+    paddingHorizontal: 10,
+    fontFamily: fonts.Light,
+  },
+  forgotPasswordText: {
+    textAlign: "right",
+    color: colors.secondary,
+    fontFamily: fonts.SemiBold,
+    marginVertical: 10,
+  },
+  loginButtonWrapper: {
+    backgroundColor: '#ffff',
+    borderRadius: 100,
+    marginTop: 20,
+  },
+  loginText: {
+    color: colors.white,
+    fontSize: 20,
+    fontFamily: fonts.SemiBold,
+    textAlign: "center",
+    padding: 10,
+  },
+  continueText: {
+    textAlign: "center",
+    marginVertical: 20,
+    fontSize: 14,
+    fontFamily: fonts.Regular,
+    color: colors.secondary,
+  },
+  googleButtonContainer: {
+    flexDirection: "row",
+    // borderWidth: 2,
+    // borderColor: colors.secondary,
+    backgroundColor: '#ffff',
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    padding:8,
+    gap: 10,
+  },
+  googleImage: {
+    height: 20,
+    width: 20,
+  },
+  googleText: {
+    fontSize: 20,
+    fontFamily: fonts.SemiBold,
+    color:colors.primary
+  },
+  footerContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 20,
+    gap: 5,
+  },
+  accountText: {
+    color: colors.secondary,
+    fontFamily: fonts.Regular,
+  },
+  signupText: {
+    color: colors.white,
+    fontFamily: fonts.Bold,
   },
 });
-
-export default LoginScreen;
