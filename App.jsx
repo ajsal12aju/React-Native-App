@@ -20,7 +20,7 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName="Reminder"
+          initialRouteName="Home"
         >
                     <Stack.Screen name="SingUp" component={SignUpScreen} />
           <Stack.Screen name="Reminder" component={RemindersScreen} />
