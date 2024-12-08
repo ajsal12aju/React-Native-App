@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "153521840074",
+    "project_id": "stepcount-7a4af",
+    "storage_bucket": "stepcount-7a4af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153521840074:android:c59db0b7525e7de3d13933",
+        "android_client_info": {
+          "package_name": "com.anonymous.stepCount"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153521840074-jmc27rn8gh5s3r6qhh54kh1musrr4p0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMitKvXPeDPqM-bBsnteyZVzE_QmOCJAU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153521840074-jmc27rn8gh5s3r6qhh54kh1musrr4p0h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
