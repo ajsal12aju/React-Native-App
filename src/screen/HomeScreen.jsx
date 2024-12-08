@@ -13,7 +13,13 @@ const HomeScreen = () => {
   const handleRemider = () =>{
     navigation.navigate("Reminder"); 
   }
+const handleLogin = () =>{
+    navigation.navigate("Login"); 
+  }
 
+  const handleWater = () => {
+    navigation.navigate("Water")
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
@@ -30,10 +36,14 @@ const HomeScreen = () => {
           <MaterialIcons name="dashboard" size={24} color="black" style={styles.icon} />
           <View style={styles.headerRightIcons}>
             <Ionicons name="search" size={24} color="black" style={styles.icon} />
+           <TouchableOpacity onPress={handleLogin}>
+
             <Image
               source={{ uri: 'https://via.placeholder.com/40' }}
               style={styles.profilePic}
             />
+            </TouchableOpacity>
+
           </View>
         </View>
 
@@ -73,6 +83,7 @@ const HomeScreen = () => {
               <Text style={styles.cardCount}>1200 kcal</Text>
             </View>
           </View>
+<TouchableOpacity onPress={handleWater}>
 
           <View style={styles.cardItem}>
             <FontAwesome name="tint" size={40} color="#4682B4" style={{...styles.icon, marginEnd:33}} />
@@ -81,6 +92,7 @@ const HomeScreen = () => {
               <Text style={styles.cardCount}>Daily 3L</Text>
             </View>
           </View>
+</TouchableOpacity>
 
           <View style={styles.cardItem}>
             <Ionicons name="walk" size={40} color="#32CD32" style={styles.icon} />

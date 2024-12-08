@@ -15,13 +15,13 @@ import { TimePickerModal } from "react-native-paper-dates";
 import { Switch } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "../utils/colors";
-import { Ionicons } from "@expo/vector-icons"; // Importing Ionicons for icons
+import { Ionicons } from "@expo/vector-icons";
 
 
 const ReminderPage = ({ navigation }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [time, setTime] = useState(null);
-  const [subject, setSubject] = useState(""); // New state for subject
+  const [subject, setSubject] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminders, setReminders] = useState([]);
   const [isReminderOn, setIsReminderOn] = useState(false);
@@ -39,7 +39,7 @@ const ReminderPage = ({ navigation }) => {
   // Load reminders from AsyncStorage on component mount
   useEffect(() => {
     const loadReminders = async () => {
-      try {
+      try { 
         const storedReminders = await AsyncStorage.getItem("reminders");
         if (storedReminders) {
           setReminders(JSON.parse(storedReminders));
@@ -162,6 +162,7 @@ const ReminderPage = ({ navigation }) => {
     data={reminders}
     renderItem={({ item, index }) => (
       <View style={styles.reminderItem}>
+        
         <View style={styles.reminderTextContainer}>
           <Text style={styles.reminderText}>
             {item.day}: {item.time} - {item.subject}
@@ -170,13 +171,7 @@ const ReminderPage = ({ navigation }) => {
 
         <View style={styles.reminderActions}>
           {/* Icon on the right side */}
-          <Ionicons
-            name="ios-information-circle-outline"
-            size={24}
-            color="black"
-            style={styles.icon}
-            onPress={() => handleIconPress(item)} // Handle icon press if needed
-          />
+        
 
           {/* Toggle switch at the end */}
           <Switch
@@ -292,22 +287,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   reminderItem: {
-    backgroundColor: "#fff",
+    backgroundColor: "#333333",
     padding: 10,
     marginBottom: 10,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
+      shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
     flexDirection: "row",
     justifyContent: "space-between", // Align text and actions to opposite sides
     alignItems: "center", // Vertically align the text and icon
   },
   reminderTextContainer: {
-    flex: 1, // Take available space for text
+    flex: 1,
+    marginLeft:10 // Take available space for text
   },
   reminderText: {
     fontSize: 16,
-    color: "black",
+    color: "white",
   },
   reminderActions: {
     flexDirection: "row",

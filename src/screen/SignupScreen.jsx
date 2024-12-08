@@ -203,9 +203,9 @@ const styles = StyleSheet.create({
   },
   googleButtonContainer: {
     flexDirection: "row",
-    borderWidth: 2,
+    // borderWidth: 2,
     borderColor: colors.secondary,
-    backgroundColor:colors.secondary,
+    backgroundColor: 'white',
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",

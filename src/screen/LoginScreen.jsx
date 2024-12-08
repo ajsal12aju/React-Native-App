@@ -20,7 +20,7 @@ const LoginScreen = () => {
 
 const navigation = useNavigation();
   const handleGoToSignUp = () => {
-    navigation.navigate("Home"); 
+    navigation.navigate("SignUp"); 
   };
    const toHome = () => {
     navigation.navigate("Home"); 
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   loginButtonWrapper: {
-    backgroundColor: '#ffff',
+    backgroundColor: 'black  ',
     borderRadius: 100,
     marginTop: 20,
   },

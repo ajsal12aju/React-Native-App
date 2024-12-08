@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from './src/screen/HomeScreen';  // If you exported the component like this
 import SignUpScreen from "./src/screen/SignupScreen";
 import RemindersScreen from "./src/screen/RemindersPage";
-
+import WaterIntakeTracker from "./src/screen/waterIntake";
 
 import { SafeAreaView } from 'react-native'; // Import SafeAreaView
 
@@ -22,7 +22,10 @@ export default function App() {
           }}
           initialRouteName="Home"
         >
-                    <Stack.Screen name="SingUp" component={SignUpScreen} />
+                              <Stack.Screen name="Water" component={WaterIntakeTracker} />
+
+          
+                    <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="Reminder" component={RemindersScreen} />
 
           <Stack.Screen name="Login" component={LoginScreen} />
