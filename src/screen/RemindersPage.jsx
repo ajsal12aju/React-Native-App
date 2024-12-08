@@ -1,25 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, FlatList } from 'react-native';
-import { TimePickerModal } from 'react-native-paper-dates';
-import { Switch } from 'react-native-paper';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  FlatList,
+  TextInput,
+} from "react-native";
+import { TimePickerModal } from "react-native-paper-dates";
+import { Switch } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { colors } from "../utils/colors";
+import { Ionicons } from "@expo/vector-icons"; // Importing Ionicons for icons
+
 
 const ReminderPage = ({ navigation }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [time, setTime] = useState(null);
+  const [subject, setSubject] = useState(""); // New state for subject
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminders, setReminders] = useState([]);
   const [isReminderOn, setIsReminderOn] = useState(false);
 
-  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
-  const saveReminder = () => {
-    if (!selectedDay || !time) {
-      Alert.alert("Error", "Please select a day and time for the reminder.");
+  // Load reminders from AsyncStorage on component mount
+  useEffect(() => {
+    const loadReminders = async () => {
+      try {
+        const storedReminders = await AsyncStorage.getItem("reminders");
+        if (storedReminders) {
+          setReminders(JSON.parse(storedReminders));
+        }
+      } catch (error) {
+        console.log("Failed to load reminders from storage:", error);
+      }
+    };
+
+    loadReminders();
+  }, []);
+
+  const saveReminder = async () => {
+    if (!selectedDay || !time || !subject) {
+      Alert.alert("Error", "Please select a day, time, and subject for the reminder.");
       return;
     }
-    setReminders(prev => [...prev, { day: selectedDay, time }]);
+
+    const newReminder = { day: selectedDay, time, subject };
+    const updatedReminders = [...reminders, newReminder];
+
+    try {
+      // Save to AsyncStorage
+      await AsyncStorage.setItem("reminders", JSON.stringify(updatedReminders));
+      setReminders(updatedReminders);
+    } catch (error) {
+      console.log("Failed to save reminder:", error);
+    }
+
+    // Reset the state
     setSelectedDay(null);
     setTime(null);
+    setSubject(""); // Reset subject
     setIsReminderOn(true);
   };
 
@@ -33,7 +86,11 @@ const ReminderPage = ({ navigation }) => {
   };
 
   const handleTimeConfirm = (time) => {
-    setTime(time);
+    // Format the time object to a readable string (HH:mm)
+    const formattedTime = `${time.hours}:${
+      time.minutes < 10 ? "0" + time.minutes : time.minutes
+    }`;
+    setTime(formattedTime);
     setShowTimePicker(false);
   };
 
@@ -42,144 +99,232 @@ const ReminderPage = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Set a Reminder</Text>
-      
-      <View style={styles.dayList}>
-        {daysOfWeek.map((day, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.dayItem, selectedDay === day && styles.selectedDay]}
-            onPress={() => handleDaySelect(day)}
-          >
-            <Text style={styles.dayText}>{day}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground
+        source={require("../assets/signupBg.jpg")}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        {/* Overlay */}
+        <View style={styles.overlay} pointerEvents="none"></View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Text style={styles.heading}>Set a Reminder</Text>
 
-      {showTimePicker && (
-        <TimePickerModal
-          visible={showTimePicker}
-          onConfirm={handleTimeConfirm}
-          onDismiss={handleTimeCancel}
-        />
-      )}
+          <View style={styles.dayList}>
+            {daysOfWeek.map((day, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.dayItem,
+                  selectedDay === day && styles.selectedDay,
+                ]}
+                onPress={() => handleDaySelect(day)}
+              >
+                <Text style={styles.dayText}>{day}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-      {time && (
-        <Text style={styles.timeText}>
-          Reminder set for {selectedDay} at {time}
-        </Text>
-      )}
-
-      <TouchableOpacity style={styles.saveButton} onPress={saveReminder}>
-        <Text style={styles.saveButtonText}>Save Reminder</Text>
-      </TouchableOpacity>
-
-      <View style={styles.remindersList}>
-        <Text style={styles.remindersTitle}>Your Reminders</Text>
-        <FlatList
-          data={reminders}
-          renderItem={({ item }) => (
-            <View style={styles.reminderItem}>
-              <Text style={styles.reminderText}>{item.day}: {item.time}</Text>
-            </View>
+          {showTimePicker && (
+            <TimePickerModal
+              visible={showTimePicker}
+              onConfirm={handleTimeConfirm}
+              onDismiss={handleTimeCancel}
+            />
           )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
 
-      <View style={styles.toggleContainer}>
-        <Text style={styles.toggleText}>Turn Reminder {isReminderOn ? "Off" : "On"}</Text>
-        <Switch value={isReminderOn} onValueChange={toggleReminder} />
+          {time && (
+            <Text style={styles.timeText}>
+              Reminder set for {selectedDay} at {time}
+            </Text>
+          )}
+
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Subject"
+            value={subject}
+            onChangeText={setSubject}
+          />
+
+          <TouchableOpacity style={styles.saveButton} onPress={saveReminder}>
+            <Text style={styles.saveButtonText}>Save Reminder</Text>
+          </TouchableOpacity>
+ {/* <View style={styles.toggleContainer}>
+            <Text style={styles.toggleText}>
+              Turn Reminder {isReminderOn ? "Off" : "On"}
+            </Text>
+            <Switch value={isReminderOn} onValueChange={toggleReminder} /> */}
+          {/* </View> */}
+         
+<View style={styles.remindersList}>
+  <Text style={styles.remindersTitle}>Your Reminders</Text>
+  <FlatList
+    data={reminders}
+    renderItem={({ item, index }) => (
+      <View style={styles.reminderItem}>
+        <View style={styles.reminderTextContainer}>
+          <Text style={styles.reminderText}>
+            {item.day}: {item.time} - {item.subject}
+          </Text>
+        </View>
+
+        <View style={styles.reminderActions}>
+          {/* Icon on the right side */}
+          <Ionicons
+            name="ios-information-circle-outline"
+            size={24}
+            color="black"
+            style={styles.icon}
+            onPress={() => handleIconPress(item)} // Handle icon press if needed
+          />
+
+          {/* Toggle switch at the end */}
+          <Switch
+            value={item.isReminderOn} // Assuming you're managing the toggle state for each reminder
+            onValueChange={() => toggleReminderState(index)} // Toggle state function for each reminder
+          />
+        </View>
       </View>
-    </View>
+    )}
+    keyExtractor={(item, index) => index.toString()}
+  />
+</View>
+
+         
+        </ScrollView>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "white",
+    paddingTop: 15,
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    zIndex: 1,
+  },
+  scrollContainer: {
+    paddingBottom: 80,
+    flexGrow: 1,
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
     marginBottom: 20,
+    marginBlock: 20,
   },
   dayList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   dayItem: {
+    width: "30%", // 3 cards per row
     paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
+    paddingHorizontal: 10,
+    backgroundColor: "#333333",
     borderRadius: 10,
-    margin: 5,
+    marginVertical: 5,
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ddd',
+    shadowColor: "#000",
   },
   selectedDay: {
-    backgroundColor: '#FF6347',
-    borderColor: '#FF6347',
+    backgroundColor: "#FF6347",
+    borderColor: "#FF6347",
   },
   dayText: {
-    fontSize: 18,
-    color: '#333',
+    fontSize: 16,
+    color: "white",
   },
   timeText: {
     fontSize: 16,
-    color: '#333',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     marginTop: 10,
   },
+  input: {
+    height: 40,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginTop: 15,
+    backgroundColor: "#fff",
+    color: "#333",
+  },
   saveButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 15,
-    borderRadius: 10,
+    backgroundColor: "black",
+    paddingVertical: 10,
+    borderRadius: 35,
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   saveButtonText: {
     fontSize: 18,
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   remindersList: {
     marginTop: 20,
   },
   remindersTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "white",
     marginBottom: 10,
   },
   reminderItem: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 10,
     marginBottom: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
+    flexDirection: "row",
+    justifyContent: "space-between", // Align text and actions to opposite sides
+    alignItems: "center", // Vertically align the text and icon
+  },
+  reminderTextContainer: {
+    flex: 1, // Take available space for text
   },
   reminderText: {
     fontSize: 16,
-    color: '#333',
+    color: "black",
+  },
+  reminderActions: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    marginRight: 10, // Space between icon and toggle
   },
   toggleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 20,
   },
   toggleText: {
     fontSize: 16,
-    color: '#333',
+    color: "white",
   },
 });
 

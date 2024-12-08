@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView,  ImageBackground,
- TouchableOpacity, Image, ScrollView } from 'react-native';
+ TouchableOpacity, Image, ScrollView, 
+ Button} from 'react-native';
 import { MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
 import CustomProgressBar from './ProgressBar';
 import { useNavigation } from "@react-navigation/native";
@@ -21,7 +22,7 @@ const HomeScreen = () => {
         resizeMode="cover"
       >
         {/* Overlay */}
-        <View style={styles.overlay}></View>
+        <View style={styles.overlay} pointerEvents="none"></View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         
         {/* Header Section */}
@@ -88,14 +89,18 @@ const HomeScreen = () => {
               <Text style={styles.cardCount}>8000 steps</Text>
             </View>
           </View>
+<TouchableOpacity onPress={handleRemider}>
+  <View style={styles.cardItem}>
+    <MaterialIcons name="notifications-active" size={40} color="#FFD700" style={styles.icon} />
+    <View style={styles.cardContent}>
+      <Text style={styles.cardTitle}>Reminder</Text>
+      <Text style={styles.cardCount}>Stay Hydrated!</Text>
+    </View>
+  </View>
+</TouchableOpacity>
 
-          <View style={styles.cardItem} onPress={handleRemider}>
-            <MaterialIcons name="notifications-active" size={40} color="#FFD700" style={styles.icon} />
-            <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Reminder</Text>
-              <Text style={styles.cardCount}>Stay Hydrated!</Text>
-            </View>
-          </View>
+
+        
 
         </View>
 
